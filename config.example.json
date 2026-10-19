@@ -1,0 +1,41 @@
+{
+  "_comment": [
+    "复制成 ~/.dsh/relay-pool.json 后按需改；没有这个文件时插件什么都不做（全部请求原样放行）。",
+    "pools 是一组「能力等价」的通道：插件只在同一个 pool 内部换站，绝不跨池换模型。",
+    "同一个 pool 里允许写不同 model 名（例如 bree 的 1017 和 zxcbug 的 flash），前提是你确认它们同档。",
+    "cost 只是相对权重，不用换算真实单价：55 对 100 表示后者贵 45%（bree 是 zxcbug 的 0.55 倍）。",
+    "concurrency 是「同一时刻在飞」的上限，按账号（account）算 —— 多个 provider 指同一上游时共用一个额度。",
+    "rpm 是「最近 60 秒最多几次请求」，0 = 不限；minGapMs 是「两次请求至少隔多少毫秒」，0 = 不限。",
+    "为什么两个都要：12 路短请求实测 42.7% 返回 502，那时在飞数根本没到上限 —— 打死它的是密度，不是同时几个。",
+    "bree 现在只在 headless profile 里注册过；桌面端要用它，得先把 headless 那份 provider 块也加进 desktop 的 cordis.patch.yml。"
+  ],
+  "enabled": true,
+  "dryRun": false,
+  "preferCurrent": true,
+  "relays": {
+    "zxcbug": { "cost": 100, "concurrency": 12, "rpm": 0, "minGapMs": 0 },
+    "bree": { "cost": 55, "concurrency": 8, "rpm": 20, "minGapMs": 200 }
+  },
+  "pools": [
+    {
+      "id": "flash",
+      "label": "DeepSeek V4.1 Flash —— 主会话走 zxcbug，子代理优先 bree、满了回落 zxcbug",
+      "routes": [
+        { "provider": "bree", "model": "deepseek-v4.1-flash-1017" },
+        { "provider": "zxcbug", "model": "deepseek-v4.1-flash" }
+      ]
+    },
+    {
+      "id": "astra",
+      "label": "GPT-6 Astra —— 只有一条路由：不换站，只做并发记账与失败冷却",
+      "routes": [
+        { "provider": "portdan", "model": "gpt-6-astra" }
+      ]
+    }
+  ],
+  "stickiness": true,
+  "stickinessMaxRank": 1,
+  "cooldownBaseMs": 60000,
+  "cooldownFactor": 2,
+  "cooldownMaxMs": 300000
+}

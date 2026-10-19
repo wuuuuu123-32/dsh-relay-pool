@@ -1,0 +1,30 @@
+{
+  "name": "dsh-relay-pool",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "并发感知的多中转站路由：同池内按价格/负载/冷却挑站，保证质量优先用便宜站",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "lib",
+    "cordis.patch.yml",
+    "config.example.json",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "test": "node test/select.test.js && node test/hooks.test.js && node test/ledger.test.js && node test/smoke.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

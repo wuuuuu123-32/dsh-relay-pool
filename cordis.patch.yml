@@ -1,0 +1,8 @@
+# dsh-relay-pool 的加载条目
+#
+# ⚠️ 只写在这个文件里。cordis.yml 每次启动会被 bundle 层重新生成，手写进去的条目会消失。
+# ⚠️ 必须是 `- insert: [...]` 包起来；裸 `- id: xxx` 会被当成"按 id 覆盖已有条目"，
+#    id 不存在时静默忽略（2026-10-18 踩过两次）。
+- insert:
+    - id: relay-pool
+      name: dsh-relay-pool

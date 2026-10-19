@@ -1,0 +1,8 @@
+node_modules/
+ref/
+*.log
+status.json
+relay-pool.json
+.DS_Store
+Thumbs.db
+tools/install-desktop.py
